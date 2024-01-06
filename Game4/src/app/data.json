@@ -3,12 +3,14 @@
         "show": "_og",
         "answer": "D",
         "fill": "Dog",
+        "img": "https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*",
 		"id": "0"
     },
     {
         "show": "_og",
         "answer": "L",
         "fill": "Log",
+        "img": "https://www.policynote.ca/wp-content/uploads/2017/02/ccpa-bc_log-export-drain1-1.jpg",
 		"id": "1"
     }
 ]
