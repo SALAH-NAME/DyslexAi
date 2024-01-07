@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered Layout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Preventing the default image drag behavior */
+        div[draggable="true"] {
+           cursor: pointer;
+        }
+        .custom-cursor {
+            cursor: move !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-200 w-screen h-screen m-0 p-0">
+    <div class="flex flex-col items-center justify-center h-full">
+        <div class="flex gap-4 mb-8 px-4">
+            <div class="dropzone bg-gray-400 rounded-md w-24 h-24 text-4xl flex items-center justify-center" id="dropzone1">_</div>
+            <div class="bg-gray-300 rounded-md w-24 h-24 text-4xl flex items-center justify-center">O</div>
+            <div class="bg-gray-300 rounded-md w-24 h-24 text-4xl flex items-center justify-center">G</div>
+        </div>
+
+        <div class="flex gap-4 md:absolute md:bottom-10 md:left-1/2 md:-translate-x-1/2 px-4">
+            <div class="custom-cursor bg-red-400 rounded-md w-24 h-24 text-4xl flex items-center justify-center cursor-pointer" draggable="true" id="dragD">D</div>
+            <div class="custom-cursor bg-red-400 rounded-md w-24 h-24 text-4xl flex items-center justify-center cursor-pointer" draggable="true" id="dragL">L</div>
+        </div>
+    </div>
+
+<script>
+// Function to handle the start of dragging
+function dragging(event) {
+    event.dataTransfer.setData("text", event.target.id);
+    // Adding 'custom-cursor' class to the body to change the cursor
+    document.body.classList.add('custom-cursor');
+}
+
+// Function to remove the custom cursor after dragging
+function dragEnd() {
+    // Removing 'custom-cursor' class from the body
+    document.body.classList.remove('custom-cursor');
+}
+
+// Function to handle the drop
+function dropped(event, targetId) {
+    event.preventDefault();
+    const data = event.dataTransfer.getData("text");
+
+    // Check if target is eligible for dropping
+    const target = document.getElementById(targetId);
+    if (target) {
+        target.innerHTML = document.getElementById(data).textContent;
+    }
+
+    // Calling the dropped custom function
+    droppedCustom(data, targetId); // You'll need to implement this
+}
+
+// Add dragstart event listeners to draggable elements
+document.querySelectorAll('div[draggable="true"]').forEach(elem => {
+    elem.addEventListener('dragstart', dragging);
+    elem.addEventListener('dragend', dragEnd);
+});
+
+// Allow drop on dropzones
+document.querySelectorAll('.dropzone').forEach(dropzone => {
+    dropzone.addEventListener('dragover', function(event) {
+        // Prevent default behavior (prevent file from being opened)
+        event.preventDefault();
+    });
+
+    dropzone.addEventListener('drop', function(event) {
+        dropped(event, this.id);
+    });
+});
+
+// Implement your custom functions here (just placeholders)
+function droppedCustom(dragId, dropId) {
+    console.log(`Button with id ${dragId} dropped on div with id ${dropId}`);
+}
+</script>
+</body>
+</html>

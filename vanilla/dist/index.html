@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered Layout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            content: [
+                "*.{html}"
+            ],
+            theme: {
+                extend: {
+                    backgroundImage: {
+                        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+                        "gradient-conic":
+                        "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+                    },
+                    fontFamily: {
+                        valoon: ["Valoon", "sans-serif"],
+                        varela: ["Varela Round", "sans-serif"],
+                        farsan: ["Farsan", "cursive"],
+                        ghibo: ["Ghibo Talk", "sans-serif"],
+                    },
+                },
+            },
+            plugins: [],
+        }
+    </script>
+    <style>
+        
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Farsan&display=swap');
+
+        :root {
+        --foreground-rgb: 0, 0, 0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --foreground-rgb: 255, 255, 255;
+        }
+        }
+
+        body {
+        color: rgb(var(--foreground-rgb));
+        background: #FFF8E7;
+        }
+
+        @font-face {
+            font-family: 'Valoon';
+            src: url('assets/Valoon.ttf') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Ghibo Talk';
+            src: url('assets/Ghibo Talk.otf') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
+    <style>
+        /* Preventing the default image drag behavior */
+        div[draggable="true"] {
+           cursor: pointer;
+        }
+        .custom-cursor {
+            cursor: move !important;
+        }
+    </style>
+</head>
+<body class="bg-[#FFF8E7] w-screen h-screen m-0 p-0 flex">
+    <div class="fixed top-[1%] left-[0] text-8xl w-screen flex items-center justify-center font-valoon"><span>Level 1</span></div>
+    <div class="w-1/2 h-full bg-[#FFF8E7] flex flex-col items-center justify-center gap-2">
+        <div class="w-64 h-64 rounded-lg bg-[#ADD8E6] p-4">
+            <img src="assets/images/ham.png" alt="" class="w-full h-full object-contain" />
+        </div>
+        <div class="flex gap-2">
+            <div class="dropzone bg-[#FFF8E7] border border-[#ADD8E6] rounded-md p-4 text-4xl flex items-center justify-center font-ghibo" id="dropzone1">_</div>
+            <div class="bg-[#FFF8E7] border border-[#ADD8E6] rounded-md p-4 text-4xl flex items-center justify-center font-ghibo">A</div>
+            <div class="bg-[#FFF8E7] border border-[#ADD8E6] rounded-md p-4 text-4xl flex items-center justify-center font-ghibo">M</div>
+        </div>
+    </div>
+    <div class="w-1/2 h-full bg-[#FDFD66] flex flex-col items-center justify-center gap-2">
+        <div class="w-64 h-64 rounded-lg bg-[#ADD8E6] p-4">
+            <img src="assets/images/jam.png" alt="" class="w-full h-full object-contain" />
+        </div>
+        <div class="flex gap-2">
+            <div class="dropzone bg-[#FFF8E7] border border-[#ADD8E6] rounded-md p-4 text-4xl flex items-center justify-center font-ghibo" id="dropzone2">_</div>
+            <div class="bg-[#FFF8E7] border border-[#ADD8E6] rounded-md p-4 text-4xl flex items-center justify-center font-ghibo">A</div>
+            <div class="bg-[#FFF8E7] border border-[#ADD8E6] rounded-md p-4 text-4xl flex items-center justify-center font-ghibo">M</div>
+        </div>
+    </div>
+    <div class="fixed bottom-[4%] left-[0] text-8xl w-screen flex gap-4 items-center justify-center font-valoon">
+        <div class="custom-cursor bg-red-400 rounded-md p-4 text-4xl flex items-center justify-center cursor-pointer" draggable="true" id="dragD">D</div>
+        <div class="custom-cursor bg-red-400 rounded-md p-4 text-4xl flex items-center justify-center cursor-pointer" draggable="true" id="dragL">L</div>
+
+    </div>
+
+    <script>
+        // Function to handle the start of dragging
+        function dragging(event) {
+            event.dataTransfer.setData("text", event.target.id);
+            // Adding 'custom-cursor' class to the body to change the cursor
+            document.body.classList.add('custom-cursor');
+        }
+        
+        // Function to remove the custom cursor after dragging
+        function dragEnd() {
+            // Removing 'custom-cursor' class from the body
+            document.body.classList.remove('custom-cursor');
+        }
+        
+        // Function to handle the drop
+        function dropped(event, targetId) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData("text");
+        
+            // Check if target is eligible for dropping
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.innerHTML = document.getElementById(data).textContent;
+            }
+        
+            // Calling the dropped custom function
+            droppedCustom(data, targetId); // You'll need to implement this
+        }
+        
+        // Add dragstart event listeners to draggable elements
+        document.querySelectorAll('div[draggable="true"]').forEach(elem => {
+            elem.addEventListener('dragstart', dragging);
+            elem.addEventListener('dragend', dragEnd);
+        });
+        
+        // Allow drop on dropzones
+        document.querySelectorAll('.dropzone').forEach(dropzone => {
+            dropzone.addEventListener('dragover', function(event) {
+                // Prevent default behavior (prevent file from being opened)
+                event.preventDefault();
+            });
+        
+            dropzone.addEventListener('drop', function(event) {
+                dropped(event, this.id);
+            });
+        });
+        
+        // Implement your custom functions here (just placeholders)
+        function droppedCustom(dragId, dropId) {
+            console.log(`Button with id ${dragId} dropped on div with id ${dropId}`);
+        }
+        </script>
+        
+</body>
+</html>
